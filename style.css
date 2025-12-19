@@ -1,0 +1,244 @@
+/* ============================================
+   KOKINA ANIMATION - YILBAŞI TEMASI (CAFCAFLI)
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(180deg,
+            #050a15 0%,
+            #0a1628 20%,
+            #1a2a4a 50%,
+            #0f1c2e 100%);
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+}
+
+/* ============================================
+   PARILTILI ARKA PLAN
+   ============================================ */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(255, 215, 0, 0.08) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 30%, rgba(255, 100, 100, 0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, rgba(100, 200, 255, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ============================================
+   CANVAS
+   ============================================ */
+#kokina-canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+/* ============================================
+   KAR EFEKTİ - DAHA PARLAK
+   ============================================ */
+#snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: white;
+    font-size: 1rem;
+    opacity: 0.9;
+    animation: fall linear infinite;
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.8),
+        0 0 15px rgba(200, 220, 255, 0.5);
+    filter: drop-shadow(0 0 3px white);
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0.4;
+    }
+}
+
+/* ============================================
+   IŞILTI PARÇACIKLARI
+   ============================================ */
+#sparkle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+    overflow: hidden;
+}
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: sparkle 2s ease-in-out infinite;
+    box-shadow:
+        0 0 6px 2px rgba(255, 215, 0, 0.8),
+        0 0 12px 4px rgba(255, 215, 0, 0.4);
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   MESAJ ALANI - DAHA GÖSTERIŞLI
+   ============================================ */
+#message-container {
+    position: fixed;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+}
+
+#message-container.visible {
+    opacity: 1;
+}
+
+#message-container h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    background: linear-gradient(135deg, #ffd700 0%, #ffec8b 25%, #ffd700 50%, #daa520 75%, #ffd700 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite, float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    margin-bottom: 0.5rem;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+#message-container p {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   YILDIZ EFEKTI
+   ============================================ */
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    #message-container {
+        top: 3%;
+    }
+}
