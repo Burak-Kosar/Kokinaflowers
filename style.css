@@ -237,8 +237,22 @@ body::before {
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     #message-container {
-        top: 3%;
+        top: 10%;
+        /* Biraz aşağıda dursun, çok tepeye yapışmasın */
+        width: 90%;
+    }
+
+    #message-container h1 {
+        font-size: 2rem !important;
+        /* Daha küçük başlık */
+        margin-bottom: 0.2rem;
+    }
+
+    #message-container p {
+        font-size: 0.9rem !important;
+        /* Daha küçük alt yazı */
+        letter-spacing: 1px;
     }
 }

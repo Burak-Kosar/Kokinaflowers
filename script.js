@@ -33,6 +33,7 @@ const BASE_CONFIG = {
     potWidth: 120,
     potHeight: 85,
     branchThicknessMult: 1.0, // Dal kalınlık çarpanı
+    branchHeightMult: 1.0,    // Dal yükseklik çarpanı
     treeScale: 1.0,           // Ağaç ölçek çarpanı
     treeOffset: 120,          // Ağaç kenar uzaklığı
 
@@ -49,21 +50,22 @@ const BASE_CONFIG = {
 let CONFIG = { ...BASE_CONFIG };
 
 function updateConfig() {
-    const isMobile = window.innerWidth < 768; // Mobil eşiği
+    const isMobile = window.innerWidth < 900; // Mobil eşiği (900px'e çıkarıldı)
 
     if (isMobile) {
-        // Mobil Ayarları - Küçültülmüş
-        const scale = 0.6; // Genel küçültme oranı
+        // Mobil Ayarları - AGRESİF KÜÇÜLTME
+        const scale = 0.5; // Genel küçültme oranı (%50)
         CONFIG.leafLength = BASE_CONFIG.leafLength * scale;
         CONFIG.leafWidth = BASE_CONFIG.leafWidth * scale;
         CONFIG.berryRadius = BASE_CONFIG.berryRadius * scale;
         CONFIG.potWidth = BASE_CONFIG.potWidth * scale;
         CONFIG.potHeight = BASE_CONFIG.potHeight * scale;
-        CONFIG.branchThicknessMult = 0.6;
+        CONFIG.branchThicknessMult = 0.5;
+        CONFIG.branchHeightMult = 0.85; // Dallar daha kısa
 
-        // Ağaçlar için özel mobil ayarları
-        CONFIG.treeScale = 0.6;
-        CONFIG.treeOffset = window.innerWidth * 0.15; // Kenardan %15
+        // Ağaçlar için özel mobil ayarları (%45 ve kenara yapışık)
+        CONFIG.treeScale = 0.45;
+        CONFIG.treeOffset = window.innerWidth * 0.05; // Kenardan %5 (çok yakın)
     } else {
         // Masaüstü Ayarları - Orijinal
         Object.assign(CONFIG, BASE_CONFIG);
@@ -153,7 +155,7 @@ function generateBranches() {
             centerX + data.startX * CONFIG.branchThicknessMult, // X ofsetini de ayarla
             baseY,
             -Math.PI / 2 + data.angle,
-            data.height,
+            data.height * CONFIG.branchHeightMult, // Yüksekliği ölçekle
             data.curve,
             data.thickness * CONFIG.branchThicknessMult, // Kalınlığı ölçekle
             index
