@@ -21,18 +21,20 @@ const BRANCH_DATA = [
 // ============================================
 // KONFİGÜRASYON - BÜYÜTÜLMÜŞ ÖLÇEKLER
 // ============================================
-const CONFIG = {
-    // Yaprak ayarları - büyütüldü
+// ============================================
+// KONFİGÜRASYON - Responsive
+// ============================================
+// Varsayılan masaüstü değerleri
+const BASE_CONFIG = {
     leafLength: 16,
     leafWidth: 5,
-
-    // Meyve ayarları - büyütüldü
     berriesPerCluster: 7,
     berryRadius: 7,
-
-    // Saksı ayarları - büyütüldü
     potWidth: 120,
     potHeight: 85,
+    branchThicknessMult: 1.0, // Dal kalınlık çarpanı
+    treeScale: 1.0,           // Ağaç ölçek çarpanı
+    treeOffset: 120,          // Ağaç kenar uzaklığı
 
     // Renkler
     branchColor: '#2d5a16',
@@ -42,6 +44,33 @@ const CONFIG = {
     berryHighlight: '#ff4444',
     berryShadow: '#880000'
 };
+
+// Aktif konfigürasyon (başlangıçta kopyası)
+let CONFIG = { ...BASE_CONFIG };
+
+function updateConfig() {
+    const isMobile = window.innerWidth < 768; // Mobil eşiği
+
+    if (isMobile) {
+        // Mobil Ayarları - Küçültülmüş
+        const scale = 0.6; // Genel küçültme oranı
+        CONFIG.leafLength = BASE_CONFIG.leafLength * scale;
+        CONFIG.leafWidth = BASE_CONFIG.leafWidth * scale;
+        CONFIG.berryRadius = BASE_CONFIG.berryRadius * scale;
+        CONFIG.potWidth = BASE_CONFIG.potWidth * scale;
+        CONFIG.potHeight = BASE_CONFIG.potHeight * scale;
+        CONFIG.branchThicknessMult = 0.6;
+
+        // Ağaçlar için özel mobil ayarları
+        CONFIG.treeScale = 0.6;
+        CONFIG.treeOffset = window.innerWidth * 0.15; // Kenardan %15
+    } else {
+        // Masaüstü Ayarları - Orijinal
+        Object.assign(CONFIG, BASE_CONFIG);
+        CONFIG.treeScale = 1.0;
+        CONFIG.treeOffset = 120;
+    }
+}
 
 // Animasyon için global değişken
 let swayPhase = 0;
@@ -108,6 +137,7 @@ function init() {
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    updateConfig(); // Responsive ayarları güncelle
 }
 
 // ============================================
@@ -120,12 +150,12 @@ function generateBranches() {
 
     BRANCH_DATA.forEach((data, index) => {
         const branch = generateSingleBranch(
-            centerX + data.startX,
+            centerX + data.startX * CONFIG.branchThicknessMult, // X ofsetini de ayarla
             baseY,
             -Math.PI / 2 + data.angle,
             data.height,
             data.curve,
-            data.thickness,
+            data.thickness * CONFIG.branchThicknessMult, // Kalınlığı ölçekle
             index
         );
         branches.push(branch);
@@ -202,9 +232,9 @@ function draw() {
     // 1. Zemin karı (en arkada)
     drawSnowGround();
 
-    // 2. Yılbaşı ağaçları (arka planda) - BÜYÜTÜLDÜ ve merkeze yaklaştırıldı
-    drawChristmasTree(120, canvas.height, 1.0);   // Sol ağaç
-    drawChristmasTree(canvas.width - 120, canvas.height, 1.0);  // Sağ ağaç
+    // 2. Yılbaşı ağaçları (arka planda) - RESPONSIVE
+    drawChristmasTree(CONFIG.treeOffset, canvas.height, CONFIG.treeScale);   // Sol ağaç
+    drawChristmasTree(canvas.width - CONFIG.treeOffset, canvas.height, CONFIG.treeScale);  // Sağ ağaç
 
     // 3. Dallar ve yapraklar - ANİMASYONLU
     branches.forEach((branch, index) => {
@@ -484,10 +514,10 @@ let lightPhase = 0;
 function drawTreeLights() {
     lightPhase += 0.05;
 
-    // Sol ağaç ışıkları - scale 1.0 (ağaçlarla uyumlu)
-    drawTreeLightsAt(120, canvas.height, 1.0);
+    // Sol ağaç ışıkları - RESPONSIVE
+    drawTreeLightsAt(CONFIG.treeOffset, canvas.height, CONFIG.treeScale);
     // Sağ ağaç ışıkları
-    drawTreeLightsAt(canvas.width - 120, canvas.height, 1.0);
+    drawTreeLightsAt(canvas.width - CONFIG.treeOffset, canvas.height, CONFIG.treeScale);
 
     // Işıkları animasyonla güncelle
     requestAnimationFrame(() => {
